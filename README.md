@@ -2,7 +2,7 @@
 
 This is a **SvelteKit** based project that uses **ControlNet-Hough** via the **Replicate** API to generate images from edges detected in an input image.
 
-## 🚀 Características
+## 🚀 Features
 - Upload an image and apply ControlNet-Hough.
 - Generate AI-powered images using the Replicate API.
 - Interface optimized with **SvelteKit** and **TailwindCSS**.
@@ -18,12 +18,12 @@ git clone https://github.com/JairMendoza/vision-edge.git
 cd vision-edge
 ```
 
-### 2️⃣ Instalar dependencias
+### 2️⃣ Install dependencies
 ```bash
 pnpm install
 ```
 
-### 3️⃣ Configurar la API de Replicate
+### 3️⃣ Setting up the Replicate API
 Create a `.env` file in the root of your project and add your **Replicate** API key:
 ```bash
 VITE_REPLICATE_API_TOKEN=your_token_here
