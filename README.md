@@ -1,38 +1,62 @@
-# sv
+# Vision Edge Svelte App
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+This is a **SvelteKit** based project that uses **ControlNet-Hough** via the **Replicate** API to generate images from edges detected in an input image.
 
-## Creating a project
+## 🚀 Características
+- Upload an image and apply ControlNet-Hough.
+- Generate AI-powered images using the Replicate API.
+- Interface optimized with **SvelteKit** and **TailwindCSS**.
+- Clean code with **TypeScript**, **ESLint** and **Prettier**.
 
-If you're seeing this, you've probably already done this step. Congrats!
+---
 
+## 🛠 Installation and Configuration
+
+### 1️⃣ Clone the repository
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+git clone https://github.com/JairMendoza/vision-edge.git
+cd vision-edge
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
+### 2️⃣ Instalar dependencias
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+pnpm install
 ```
 
-## Building
-
-To create a production version of your app:
-
+### 3️⃣ Configurar la API de Replicate
+Create a `.env` file in the root of your project and add your **Replicate** API key:
 ```bash
-npm run build
+VITE_REPLICATE_API_TOKEN=your_token_here
 ```
 
-You can preview the production build with `npm run preview`.
+### 4️⃣ Run the project in development mode
+```bash
+pnpm run dev
+```
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+---
+
+## 📂 Project Structure
+```
+vision-edge/
+│── src/
+│   ├── routes/
+│   │   ├── +page.svelte   # Main interface
+│   │   ├── api/
+│   │   │   ├── generate/+server.js   # Replicate API Calls
+│   ├── styles/   # Styles with TailwindCSS
+│── static/   # Static resources
+│── .env   # Environment Variables
+│── package.json   # Project setup
+```
+
+---
+
+## 📌 Technologies Used
+- **SvelteKit** (Frontend Framework)
+- **TypeScript** (Static Typing)
+- **TailwindCSS** (Fast and flexible styling)
+- **Replicate API** (Image generation with ControlNet-Hough)
+- **ESLint & Prettier** (Clean and well-formatted code)
+
+
