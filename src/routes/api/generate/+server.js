@@ -17,7 +17,6 @@ export async function POST({ request }) {
     if (!file) {
       return json({ error: "No se recibió ningún archivo." }, { status: 400 });
     }
-
     const replicate = new Replicate({
       auth: import.meta.env.VITE_REPLICATE_API_TOKEN
     });
@@ -30,39 +29,37 @@ export async function POST({ request }) {
         }
       }
     );
+    const descriptionStr = String(description).replace("Caption: ", "").trim().toLowerCase();
+    const roomTypes = ["kitchen", "living room", "bedroom", "bathroom", "hallway"];
+    let detectedRoom = roomTypes.find(room => descriptionStr.includes(room)) || "general room";
+    const hasWindow = descriptionStr.includes("window");
+    const hasDoor = descriptionStr.includes("door");
+    const structuredDescription = `A ${detectedRoom} with ${hasWindow ? "windows," : "no windows,"} and ${hasDoor ? "doors," : "no doors,"}`;
 
-    function generatePrompts(description) {
-      let a_prompt = "best quality, extremely detailed, photorealistic, realistic lighting, soft shadows";
-      let n_prompt = "lowres, bad perspective, distorted, unrealistic shadows";
+    function generatePrompts(description = "") {
+      let a_prompt = `best quality, extremely detailed, photorealistic, realistic lighting, soft shadows, high resolution, interior of a ${detectedRoom}`;
+      let n_prompt = "lowres, bad perspective, distorted, unrealistic shadows, blurry, unnatural lighting";
 
       if (description.includes("window")) {
-        a_prompt += ", windows with natural light";
+        a_prompt += ", large windows with natural light";
       } else {
         n_prompt += ", no windows";
       }
-
       if (description.includes("door")) {
         a_prompt += ", elegant wooden doors";
       } else {
         n_prompt += ", no visible doors";
       }
-
       if (description.includes("wooden floor")) {
         a_prompt += ", natural wooden textures";
       } else {
-        n_prompt += ", floor textures";
+        n_prompt += ", generic floor textures";
       }
-
       return { a_prompt, n_prompt };
     }
 
-    const { a_prompt, n_prompt } = generatePrompts(description);
-    const totalDescription = description.replace("Caption: ", "").trim() + prompt;
-    console.log('a_prompt',a_prompt);
-    console.log('n_prompt',n_prompt);
-    console.log(totalDescription)
-
-
+    const { a_prompt, n_prompt } = generatePrompts(structuredDescription);
+    const totalDescription = String(description).replace("Caption: ", "").trim() +  " " + prompt;
     const output = await replicate.run(
       "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
       {
@@ -77,12 +74,13 @@ export async function POST({ request }) {
           value_threshold: Number(value_threshold),
           image_resolution,
           detect_resolution: Number(detect_resolution),
-          distance_threshold: Number(distance_threshold)
+          distance_threshold: Number(distance_threshold),
+          eta: 0.5,
         }
       }
     );
     const output_images = [];
-    for (const [index, item] of Object.entries(output)) {
+    for (const item of Object.values(output)) {
       const image = item.toString('base64');
       output_images.push(`${image}`);
     }
