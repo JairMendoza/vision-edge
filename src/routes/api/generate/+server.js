@@ -8,7 +8,7 @@ export async function POST({ request }) {
     const prompt = formData.get("prompt");
     const scale = formData.get("scale");
     const ddim_steps = formData.get("ddim_steps");
-    const num_samples = formData.get("num_samples");
+    const eta = formData.get("eta");
     const value_threshold = formData.get("value_threshold");
     const image_resolution = formData.get("image_resolution");
     const detect_resolution = formData.get("detect_resolution");
@@ -60,6 +60,7 @@ export async function POST({ request }) {
 
     const { a_prompt, n_prompt } = generatePrompts(structuredDescription);
     const totalDescription = String(description).replace("Caption: ", "").trim() +  " " + prompt;
+    console.log(totalDescription)
     const output = await replicate.run(
       "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
       {
@@ -70,12 +71,12 @@ export async function POST({ request }) {
           a_prompt,
           n_prompt,
           ddim_steps: Number(ddim_steps),
-          num_samples,
+          num_samples: '1',
           value_threshold: Number(value_threshold),
           image_resolution,
           detect_resolution: Number(detect_resolution),
           distance_threshold: Number(distance_threshold),
-          eta: 0.5,
+          eta: Number(eta),
         }
       }
     );
